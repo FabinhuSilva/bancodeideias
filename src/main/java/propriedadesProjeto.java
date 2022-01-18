@@ -11,17 +11,10 @@
 public class propriedadesProjeto {
     public static void main(String[] args) {
         
-        conexao.ConexaoBanco bd = new conexao.ConexaoBanco();
-        //bd.conectar();
+        conexao.conexaoBanco bd = new conexao.conexaoBanco();
+        bd.conectarBanco();
         
-        String Local="127.0.0.1";
-        String NomeBanco="banco";
-        int Porta=5432;
-        String caminho="jdbc:postgresql://"+Local+":"+Porta+"/"+NomeBanco;
-        
-        System.out.println(bd.getCaminho());
-        System.out.println(caminho);
-        System.out.println(bd.getDriver());
+       
     }
     
 }

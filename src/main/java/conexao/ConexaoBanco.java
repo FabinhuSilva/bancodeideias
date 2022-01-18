@@ -1,98 +1,140 @@
 package conexao;
-import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
+public class conexaoBanco{
 
-/**
- *
- * @author Fabinhu
- */
-public class ConexaoBanco {
+    public conexaoBanco() {
+        try{
+    Class.forName(getDriver());
+    System.out.println("Conectou!");
+          }
+        catch (Exception erro){
+            System.out.println("Erro ao Conectar no banco: " + erro);
+        }
+    }
 
     
-    public Statement stm; // Responsavel por preparar e realizar pesquisas no banco de dados;
-    public ResultSet rs; // Responsavel por armazenar o resultado de um pesquisa passada para o statement;
-    private String driver ;
-    private String caminho;
-    public Connection conexao; // Responsavel por realizar a conexão com o banco de dados;
-    String Local;
-    int porta;
-    String NomeDoBanco;
-
-        public String getDriver() {
-            return driver;
-        }
-
-        public void setDriver(String driver) {
-            this.driver = driver;
-            driver = "org.postgresql.Driver";
-        }
     
-        public String getCaminho() {
-            return caminho;
-        }
+    String driver = "org.postgresql.Driver";
+    String usuario = "postgres";
+    String senha = "postgres";
+    String url = "jdbc:";
+    String banco = "postgresql";
+    int porta = 5432;
+    String enderecoBanco = "127.0.0.1";
+    String nomeBanco = "banco";
+    String urlBanco = getUrl()+getBanco()+"://"+getEnderecoBanco()+":"+getPorta()+"/"+getNomeBanco();
+    Connection conexao;
 
-        public void setCaminho(String caminho, String Local, int Porta, String NomeBanco) {
-           // this.caminho = caminho;
-            Local= getLocal();
-            Porta = getPorta();
-            NomeBanco = getNomeDoBanco();
-            this.caminho = "jdbc:postgresql://"+Local+":"+Porta+"/"+NomeBanco;
-        }
+    public Connection getConexao() {
+        return conexao;
+    }
+
+    public void setConexao(Connection conexao) {
+        this.conexao = conexao;
+    }
+
     
+   
+    public String getUrlBanco() {
+        return urlBanco;
+    }
+
+    public void setUrlBanco(String urlBanco) {
+        this.urlBanco = urlBanco;
+    }
+    public String getNomeBanco() {
+        return nomeBanco;
+    }
+
+    public void setNomeBanco(String nomeBanco) {
+        this.nomeBanco = nomeBanco;
+    }
+
+    public String getDriver() {
+        return driver;
+    }
+
+    public void setDriver(String driver) {
+        this.driver = driver;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getBanco() {
+        return banco;
+    }
+
+    public void setBanco(String banco) {
+        this.banco = banco;
+    }
+
+    public int getPorta() {
+        return porta;
+    }
+
+    public void setPorta(int porta) {
+        this.porta = porta;
+    }
+
+    public String getEnderecoBanco() {
+        return enderecoBanco;
+    }
+
+    public void setEnderecoBanco(String enderecoBanco) {
+        this.enderecoBanco = enderecoBanco;
+    }
     
-    public String getLocal() {
-            return Local;
-        }
-
-        public void setLocal(String Local) {
-            this.Local = Local;
-            Local = "127.0.0.1";
-        }
-
-        public int getPorta() {
-            return porta;
-        }
-
-        public void setPorta(int porta) {
-            this.porta = porta;
-            porta = 5432;
-            
-        }
-
-        public String getNomeDoBanco() {
-            return NomeDoBanco;
-        }
-
-        public void setNomeDoBanco(String NomeDoBanco) {
-            this.NomeDoBanco = NomeDoBanco;
-            NomeDoBanco = "banco";
-        }
+    /*
+    ------------------------------------------------
+      Crianto metodos Conectar() e Desconectar()
+     ------------------------------------------------
+    */
     
-    public void conectar() { // Metodo responsavel por realizar a conexão;
+    public void conectarBanco() throws SQLException{
+    
         try {
-            System.setProperty("jdbc.Drivers", getDriver()); // Seta a propriedade do driver de conexão;
-            conexao = DriverManager.getConnection(getCaminho()); // Realiza a conexão com o banco;
-            JOptionPane.showMessageDialog(null, "Conectado com sucesso!", "Banco de Dados", JOptionPane.INFORMATION_MESSAGE);
-        } catch (SQLException ex) {
-            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, "Erro de conexão!\nERRO: " + ex.getMessage(), "Banco de Dados", JOptionPane.INFORMATION_MESSAGE);
+        //carregango Driver JDBC    
+        Class.forName(getDriver());
+        //Connection conexao = null;
+        setConexao(DriverManager.getConnection(getUrlBanco(), getUsuario(),getSenha()));
+        System.out.println("Conexão realizada com sucesso!");
+            JOptionPane.showMessageDialog(null, "Banco Conectado com Sucesso ");
+        } 
+        catch (ClassNotFoundException ex)
+        {
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, " Class Not Found Problema de Conexão com o Banco: "+ex);
+        }
+        catch (SQLException e){
+            System.out.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, "SQl Exception Problema de Conexão com o Banco: "+e);
         }
     }
-    
-    public void desconectar() { // Metodo responsavel por fechar a conexão
-        try {
-            conexao.close(); // Fechar conexão
-            JOptionPane.showMessageDialog(null, "Conexão fechada com sucesso!", "Banco de Dados", JOptionPane.INFORMATION_MESSAGE);
-        } catch (SQLException ex) {
-            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, "Erro ao fechar a conexão!\nERRO: " + ex.getMessage(), "Banco de Dados", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-    }
-    
-        
-
 }
