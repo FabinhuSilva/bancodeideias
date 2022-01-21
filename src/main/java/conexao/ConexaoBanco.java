@@ -4,20 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-
+import java.
 public class conexaoBanco{
 
     public conexaoBanco() {
-        try{
-    Class.forName(getDriver());
-    System.out.println("Conectou!");
-          }
-        catch (Exception erro){
-            System.out.println("Erro ao Conectar no banco: " + erro);
-        }
+       
     }
-
-    
     
     String driver = "org.postgresql.Driver";
     String usuario = "postgres";
@@ -37,8 +29,6 @@ public class conexaoBanco{
     public void setConexao(Connection conexao) {
         this.conexao = conexao;
     }
-
-    
    
     public String getUrlBanco() {
         return urlBanco;
@@ -122,18 +112,19 @@ public class conexaoBanco{
         try {
         //carregango Driver JDBC    
         Class.forName(getDriver());
-        //Connection conexao = null;
-        setConexao(DriverManager.getConnection(getUrlBanco(), getUsuario(),getSenha()));
-        System.out.println("Conexão realizada com sucesso!");
-            JOptionPane.showMessageDialog(null, "Banco Conectado com Sucesso ");
+        
+        
+        //conexao = (Connection) DriverManager.getConnection(getUrlBanco(),getUrl(),getNomeBanco());
+        setConexao(DriverManager.getConnection(getUrlBanco(),getUsuario(),getSenha()));
+        JOptionPane.showMessageDialog(null, "Banco Conectado com Sucesso ");
         } 
         catch (ClassNotFoundException ex)
         {
-            System.out.println(ex.getMessage());
+            System.err.print(ex.getMessage());
             JOptionPane.showMessageDialog(null, " Class Not Found Problema de Conexão com o Banco: "+ex);
         }
         catch (SQLException e){
-            System.out.println(e.getMessage());
+            System.err.print(e.getMessage());
             JOptionPane.showMessageDialog(null, "SQl Exception Problema de Conexão com o Banco: "+e);
         }
     }
